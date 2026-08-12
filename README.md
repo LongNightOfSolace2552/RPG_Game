@@ -37,22 +37,6 @@ Battle outcomes are threshold-based: each enemy has its own Strength/Magic/Agili
   - `resources/ascii/` - ASCII art resources
 - `test/` - Unit tests, its own source root (so `test/services/CombatServiceTest.java` is package `services`, not `main.services`).
 
-## Status
-
-This is a scaffolded project structure reflecting the current game design. No mechanics are implemented yet.
-
-## Object-Oriented Design
-
-- **Abstraction**: `Item` is abstract; service behavior is defined via interfaces (`CombatService`, `TravelService`, `DialogueService`) separate from their implementations.
-- **Encapsulation**: domain state (e.g. `Player`, `Stats`, `Enemy`) is intended to be accessed only through its own methods, not exposed fields.
-- **Inheritance**: `Weapon extends Item`; `Boss extends Enemy`.
-- **Polymorphism**: code that works with an `Enemy` (e.g. combat resolution) works unchanged when handed a `Boss`, which overrides enemy-specific behavior.
-- **Exceptions**: `GameException` is the base checked exception, with `DataLoadException`, `SaveDataException`, `ItemNotFoundException`, and `InvalidCommandException` covering the main failure points (bad data files, save/load issues, missing references, invalid CUI input).
-
-## Battle Sequencing
-
-Battle outcomes are resolved first (win chance, dodge, weapon ability activation), then narrated: each resolved step becomes a `BattleAction`, matched to a dialogue template by keyword (e.g. `dodge`, `heavy_attack`) based on the stat-ratio difference between player and enemy (Agility differences produce dodge/slow-move lines, Strength/Magic differences produce attack-weight lines). `CombatSequencer` plays these actions out on a background thread, printing one line roughly every second via `CombatRenderer`, rather than dumping the whole sequence at once. Weapon ability activations (e.g. a temporary +8 Strength) are rolled per battle and narrated the same way. Players are still prompted to fight or run whenever they enter the dungeon or a boss encounter.
-
 ## Build
 
 This project builds with Ant (`build.xml`), targeting JDK 25. `App.java` and its subpackages live under `src/main/` on disk, which maps to `package main;` and `package main.<subfolder>;` in code - so the Ant source root is `src` (not `src/main`), letting the `main` folder itself act as the top-level package. Tests are their own separate source root at `test/`, so `test/services/...` is package `services`, without a `main.` prefix.
