@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="RPGGame" default="default" basedir=".">
+    <description>Builds, tests, and runs the RPGGame project.</description>
+
+    <property name="src.dir"     value="src"/>
+    <property name="test.dir"    value="test"/>
+    <property name="lib.dir"     value="lib"/>
+    <property name="build.dir"   value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="test-classes.dir" value="${build.dir}/test-classes"/>
+    <property name="dist.dir"    value="dist"/>
+    <property name="main.class"  value="main.App"/>
+
+    <path id="classpath">
+        <fileset dir="${lib.dir}" includes="**/*.jar" erroronmissingdir="false"/>
+    </path>
+
+    <target name="default" depends="jar" description="Build the project."/>
+
+    <target name="init">
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${test-classes.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+    </target>
+
+    <target name="compile" depends="init" description="Compile source code.">
+        <javac srcdir="${src.dir}" destdir="${classes.dir}"
+               classpathref="classpath" includeantruntime="false"
+               release="25"/>
+        <copy todir="${classes.dir}">
+            <fileset dir="${src.dir}" excludes="**/*.java"/>
+        </copy>
+    </target>
+
+    <target name="compile-tests" depends="compile" description="Compile test code.">
+        <javac srcdir="${test.dir}" destdir="${test-classes.dir}"
+               includeantruntime="false" release="25">
+            <classpath>
+                <path refid="classpath"/>
+                <pathelement location="${classes.dir}"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile" description="Package into a runnable jar.">
+        <jar destfile="${dist.dir}/${ant.project.name}.jar" basedir="${classes.dir}" manifest="manifest.mf"/>
+    </target>
+
+    <target name="run" depends="jar" description="Run the application.">
+        <java jar="${dist.dir}/${ant.project.name}.jar" fork="true"/>
+    </target>
+
+    <target name="test" depends="compile-tests" description="Run tests.">
+        <!-- Requires a JUnit jar (and the Ant JUnit task jar) under lib/ to enable this target. -->
+        <junit printsummary="yes" haltonfailure="no">
+            <classpath>
+                <path refid="classpath"/>
+                <pathelement location="${classes.dir}"/>
+                <pathelement location="${test-classes.dir}"/>
+            </classpath>
+            <formatter type="brief" usefile="false"/>
+            <batchtest>
+                <fileset dir="${test-classes.dir}" includes="**/*Test.class"/>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="clean" description="Clean build artifacts.">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+</project>

@@ -1,0 +1,1 @@
+# Item definitions (weapons, rings, amulets, etc.) go here

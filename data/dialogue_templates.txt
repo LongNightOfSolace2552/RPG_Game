@@ -1,0 +1,1 @@
+# Combat dialogue templates, keyed by keyword (e.g. dodge, slow_move, heavy_attack), stat category, and stat-ratio range. Uses <player>/<enemy> placeholders.
