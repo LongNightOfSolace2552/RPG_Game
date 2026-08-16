@@ -36,7 +36,7 @@ public class SaveManager {
     loads player object from the save file 
     (but does not parse, read or convert text to Player)
     */
-    public Player LoadPlayer() throws SaveDataException {
+    public Player loadPlayer() throws SaveDataException {
         return playerFileRepository.load(SAVE_PATH);
     }
     

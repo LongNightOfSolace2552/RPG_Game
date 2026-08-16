@@ -43,7 +43,7 @@ public class Player {
     returns a copy of players inventory, so players can't bypass
     addItem and removeItem to mutate the player's inventory directly
     */
-    public List<Item> getInvetory() {
+    public List<Item> getInventory() {
         return new ArrayList<>(inventory);
     }
     

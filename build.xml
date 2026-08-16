@@ -50,6 +50,16 @@
         <java jar="${dist.dir}/${ant.project.name}.jar" fork="true"/>
     </target>
 
+    <target name="run-single" depends="compile" description="Run a single class (used by NetBeans' Run File action).">
+        <fail unless="run.class">Must set property 'run.class' to a fully-qualified class name.</fail>
+        <java classname="${run.class}" fork="true">
+            <classpath>
+                <path refid="classpath"/>
+                <pathelement location="${classes.dir}"/>
+            </classpath>
+        </java>
+    </target>
+
     <target name="test" depends="compile-tests" description="Run tests.">
         <!-- Requires a JUnit jar (and the Ant JUnit task jar) under lib/ to enable this target. -->
         <junit printsummary="yes" haltonfailure="no">
