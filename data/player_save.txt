@@ -1,1 +1,5 @@
-# Player save data goes here
+name=Test
+strength=5
+magic=5
+agility=5
+currentNode=Starting Village
