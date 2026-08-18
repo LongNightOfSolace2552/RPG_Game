@@ -11,6 +11,13 @@ public class CommandParser {
     private final Scanner scanner = new Scanner(System.in);
 
     public int readMenuChoice() throws InvalidCommandException {
+        return readChoiceInRange(MIN_MENU_CHOICE, MAX_MENU_CHOICE);
+    }
+
+    // Reads a single integer choice, validated to be within [min, max].
+    // Used for the main menu and for sub-menus (node selection, item
+    // selection) that have their own valid ranges.
+    public int readChoiceInRange(int min, int max) throws InvalidCommandException {
         String input = scanner.nextLine().trim();
 
         int choice;
@@ -20,9 +27,8 @@ public class CommandParser {
             throw new InvalidCommandException("'" + input + "' is not a valid option.");
         }
 
-        if (choice < MIN_MENU_CHOICE || choice > MAX_MENU_CHOICE) {
-            throw new InvalidCommandException(
-                    "Choose a number between " + MIN_MENU_CHOICE + " and " + MAX_MENU_CHOICE + ".");
+        if (choice < min || choice > max) {
+            throw new InvalidCommandException("Choose a number between " + min + " and " + max + ".");
         }
 
         return choice;

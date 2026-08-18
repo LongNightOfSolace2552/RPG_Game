@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import main.domain.items.Item;
 import main.domain.player.Player;
 import main.domain.player.Stats;
 import main.exceptions.DataLoadException;
@@ -16,14 +17,20 @@ public class PlayerFileRepository {
     private static final String KEY_STRENGTH = "strength";
     private static final String KEY_MAGIC = "magic";
     private static final String KEY_AGILITY = "agility";
-    private static final String KEY_NODE = "currentNode";
+    private static final String KEY_NODE = "currentNodeId";
+    private static final String KEY_INVENTORY = "inventory";
+    private static final String KEY_EQUIPPED = "equippedItem";
+    private static final String KEY_DEFEATED_BOSSES = "defeatedBosses";
+    private static final String LIST_SEPARATOR = ",";
     
     private final FileReaderUtil fileReaderUtil;
     private final FileWriterUtil fileWriterUtil;
+    private final Map<String, Item> itemCatalog;
     
-    public PlayerFileRepository(FileReaderUtil fileReaderUtil, FileWriterUtil fileWriterUtil) {
+    public PlayerFileRepository(FileReaderUtil fileReaderUtil, FileWriterUtil fileWriterUtil, Map<String, Item> itemCatalog) {
         this.fileReaderUtil = fileReaderUtil;
         this.fileWriterUtil = fileWriterUtil;
+        this.itemCatalog = itemCatalog;
     }
     
     public boolean saveExists(String path) {
@@ -44,33 +51,96 @@ public class PlayerFileRepository {
         
         Map<String, String> values = parseKeyValueLines(lines, path);
         
+        Player player;
         try {
             String name = requireValue(values, KEY_NAME, path);
             int strength = Integer.parseInt(requireValue(values, KEY_STRENGTH, path));
             int magic = Integer.parseInt(requireValue(values, KEY_MAGIC, path));
             int agility = Integer.parseInt(requireValue(values, KEY_AGILITY, path));
-            String currentNode = requireValue(values, KEY_NODE, path);
+            String currentNodeId = requireValue(values, KEY_NODE, path);
 
             Stats stats = new Stats(strength, magic, agility);
-            return new Player(name, stats, currentNode);
+            player = new Player(name, stats, currentNodeId);
         } catch (NumberFormatException e) {
             throw new SaveDataException("Save file has a non-numeric stat value: " + path, e);
         } catch (IllegalArgumentException e) {
             throw new SaveDataException("Save file has an invalid stat value: " + path, e);
         }
+        
+        restoreInventory(player, values.getOrDefault(KEY_INVENTORY, ""), path);
+        restoreEquippedItem(player, values.getOrDefault(KEY_EQUIPPED, ""), path);
+        restoreDefeatedBosses(player, values.getOrDefault(KEY_DEFEATED_BOSSES, ""));
+        
+        return player;
     }
     
     public void save(Player player, String path) throws SaveDataException {
         Stats stats = player.getStats();
         List<String> lines = new ArrayList<>();
-        
         lines.add(KEY_NAME + "=" + player.getName());
         lines.add(KEY_STRENGTH + "=" + stats.getStrength());
         lines.add(KEY_MAGIC + "=" + stats.getMagic());
         lines.add(KEY_AGILITY + "=" + stats.getAgility());
-        lines.add(KEY_NODE + "=" + player.getCurrentNodeName());
-        
+        lines.add(KEY_NODE + "=" + player.getCurrentNodeId());
+        lines.add(KEY_INVENTORY + "=" + joinItemIds(player.getInventory()));
+        lines.add(KEY_EQUIPPED + "=" + (player.hasEquippedItem() ? player.getEquippedItem().getId() : ""));
+        lines.add(KEY_DEFEATED_BOSSES + "=" + String.join(LIST_SEPARATOR, player.getDefeatedBossNodeIds()));
+
         fileWriterUtil.writeLines(path, lines);
+    }
+    
+    //joins string together using ','
+    private String joinItemIds(List<Item> items) {
+        List<String> ids = new ArrayList<>();
+        for (Item item : items) {
+            ids.add(item.getId());
+        }
+        return String.join(LIST_SEPARATOR, ids);
+    }
+    
+    private void restoreInventory(Player player, String field, String path) throws SaveDataException {
+        for (String itemId : splitList(field)) {
+            player.addItem(resolveItem(itemId, path));
+        }
+    }
+
+    private void restoreEquippedItem(Player player, String field, String path) throws SaveDataException {
+        if (field.isEmpty()) {
+            return;
+        }
+        Item item = resolveItem(field, path);
+        /*equip() removes the item from the inventory and moves it into the
+        equip slot, so give it to the inventory first, then equip it.*/
+        player.addItem(item);
+        player.equip(item);
+    }
+
+    private void restoreDefeatedBosses(Player player, String field) {
+        for (String nodeId : splitList(field)) {
+            player.markBossDefeated(nodeId);
+        }
+    }
+    
+    private Item resolveItem(String itemId, String path) throws SaveDataException {
+        Item item = itemCatalog.get(itemId);
+        if (item == null) {
+            throw new SaveDataException("Save file " + path + " references an unknown item: " + itemId);
+        }
+        return item;
+    }
+
+    private List<String> splitList(String field) {
+        List<String> result = new ArrayList<>();
+        if (field == null || field.isEmpty()) {
+            return result;
+        }
+        for (String part : field.split(LIST_SEPARATOR)) {
+            String trimmed = part.trim();
+            if (!trimmed.isEmpty()) {
+                result.add(trimmed);
+            }
+        }
+        return result;
     }
     
     //parseKeyValueLines method
