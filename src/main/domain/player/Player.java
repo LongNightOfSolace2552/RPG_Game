@@ -1,20 +1,24 @@
 package main.domain.player;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 import main.domain.items.Item;
 
 // Player model, including core stats (Strength, Magic, Agility), equipped items, and current node location.
 public class Player {
     private String name;
     private Stats stats;
-    private String currentNodeName;
+    private String currentNodeId;
     private final List<Item> inventory = new ArrayList<>();
+    private Item equippedItem;
+    private final Set<String> defeatedBossNodeIds = new HashSet<>();
     
     //constructor
-    public Player(String name, Stats stats, String currentNodeName) {
+    public Player(String name, Stats stats, String currentNodeId) {
         this.name = name;
         this.stats = stats;
-        this.currentNodeName = currentNodeName;
+        this.currentNodeId = currentNodeId;
     }
     
     //get method
@@ -26,8 +30,8 @@ public class Player {
         return stats;
     }
     
-    public String getCurrentNodeName() {
-        return currentNodeName;
+    public String getCurrentNodeId() {
+        return currentNodeId;
     }
     
     //set method
@@ -35,8 +39,8 @@ public class Player {
         this.name = name;
     }
     
-    public void setCurrentNodeName() {
-        this.currentNodeName = currentNodeName;
+    public void setCurrentNodeId(String currentNodeId) {
+        this.currentNodeId = currentNodeId;
     }
     
     /*
@@ -54,4 +58,6 @@ public class Player {
     public boolean removeItem(Item item) {
         return inventory.remove(item);
     }
+    
+    
 }
