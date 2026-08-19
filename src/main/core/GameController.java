@@ -88,6 +88,12 @@ public class GameController {
             consoleRenderer.printError(destination.getName() + " is locked. Defeat the previous node's boss first.");
             return;
         }
+        
+        //if player is already at node location
+        if(destination.getId().equals(player.getCurrentNodeId())) {
+            consoleRenderer.printMessage("You are already at " + destination.getName() + ".");
+            return;
+        }
 
         try {
             travelService.travelTo(player, destination.getId());

@@ -156,7 +156,7 @@ public class PlayerFileRepository {
             
             int separatorIndex = trimmed.indexOf("=");
             if (separatorIndex < 0) {
-                throw new SaveDataException("Malformed line save file " + path + ": " + line);
+                throw new SaveDataException("Malformed line in save file " + path + ": " + line);
             }
             
             String key = trimmed.substring(0, separatorIndex).trim();
