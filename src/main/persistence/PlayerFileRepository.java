@@ -19,8 +19,10 @@ public class PlayerFileRepository {
     private static final String KEY_AGILITY = "agility";
     private static final String KEY_NODE = "currentNodeId";
     private static final String KEY_INVENTORY = "inventory";
-    private static final String KEY_EQUIPPED = "equippedItem";
+    private static final String KEY_EQUIPPED_WEAPON = "equippedWeapon";
+    private static final String KEY_EQUIPPED_ACCESSORY = "equippedAccessory";
     private static final String KEY_DEFEATED_BOSSES = "defeatedBosses";
+    private static final String KEY_UNALLOCATED_POINTS = "unallocatedStatPoints";
     private static final String LIST_SEPARATOR = ",";
     
     private final FileReaderUtil fileReaderUtil;
@@ -68,8 +70,10 @@ public class PlayerFileRepository {
         }
         
         restoreInventory(player, values.getOrDefault(KEY_INVENTORY, ""), path);
-        restoreEquippedItem(player, values.getOrDefault(KEY_EQUIPPED, ""), path);
+        restoreEquippedItem(player, values.getOrDefault(KEY_EQUIPPED_WEAPON, ""), path);
+        restoreEquippedItem(player, values.getOrDefault(KEY_EQUIPPED_ACCESSORY, ""), path);
         restoreDefeatedBosses(player, values.getOrDefault(KEY_DEFEATED_BOSSES, ""));
+        restoreUnallocatedStatPoints(player, values.getOrDefault(KEY_UNALLOCATED_POINTS, ""));
         
         return player;
     }
@@ -83,8 +87,10 @@ public class PlayerFileRepository {
         lines.add(KEY_AGILITY + "=" + stats.getAgility());
         lines.add(KEY_NODE + "=" + player.getCurrentNodeId());
         lines.add(KEY_INVENTORY + "=" + joinItemIds(player.getInventory()));
-        lines.add(KEY_EQUIPPED + "=" + (player.hasEquippedItem() ? player.getEquippedItem().getId() : ""));
+        lines.add(KEY_EQUIPPED_WEAPON + "=" + (player.hasEquippedWeapon() ? player.getEquippedWeapon().getId() : ""));
+        lines.add(KEY_EQUIPPED_ACCESSORY + "=" + (player.hasEquippedAccessory() ? player.getEquippedAccessory().getId() : ""));
         lines.add(KEY_DEFEATED_BOSSES + "=" + String.join(LIST_SEPARATOR, player.getDefeatedBossNodeIds()));
+        lines.add(KEY_UNALLOCATED_POINTS + "=" + player.getUnallocatedStatPoints());
 
         fileWriterUtil.writeLines(path, lines);
     }
@@ -118,6 +124,19 @@ public class PlayerFileRepository {
     private void restoreDefeatedBosses(Player player, String field) {
         for (String nodeId : splitList(field)) {
             player.markBossDefeated(nodeId);
+        }
+    }
+    
+    private void restoreUnallocatedStatPoints(Player player, String field) {
+        if (field.isEmpty()) {
+            return;
+        }
+        try {
+            int points = Integer.parseInt(field);
+            player.addUnallocatedStatPoints(points);
+        } catch (NumberFormatException e) {
+            /*malformed value, leave unallocated points at 0 rather than
+            failing the whole load over a non-critical field.*/
         }
     }
     
