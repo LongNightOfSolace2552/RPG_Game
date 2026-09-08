@@ -47,7 +47,7 @@ public class ConsoleRenderer {
         
         Stats effective = player.getEffectiveStats();
         System.out.println("Power Level: " + effective.getPowerLevel());
-        System.out.println("Unallocated stat points: " + player.getUnallocatedStatsPoints());
+        System.out.println("Unallocated stat points: " + player.getUnallocatedStatPoints());
         
         System.out.println("--- Equipped Weapon ---");
         System.out.println(player.hasEquippedWeapon() ? player.getEquippedWeapon() : "(none)");
