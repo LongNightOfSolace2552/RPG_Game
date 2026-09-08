@@ -4,5 +4,7 @@ package main.domain.combat;
 // boss-specific behavior (e.g. reward or dialogue overrides), so it can be
 // used anywhere an Enemy is expected.
 public class Boss extends Enemy {
-
+    public Boss(String id, String name, int strengthThreshold, int magicThreshold){
+        super(id,name,strengthThreshold,magicThreshold);
+    }
 }

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import main.domain.items.Accessory;
 import main.domain.items.Item;
-import main.domain.items.ItemAbility;
 import main.domain.items.Weapon;
 import main.exceptions.DataLoadException;
 
@@ -14,7 +13,6 @@ import main.exceptions.DataLoadException;
 public class ItemFileRepository {
     private static final String ITEMS_PATH = "data/items.txt";
     private static final String FIELD_SEPARATOR = "\\|";
-    private static final String NO_ABILITY_MARKER = "-";
 
     private final FileReaderUtil fileReaderUtil;
 
@@ -28,8 +26,8 @@ public class ItemFileRepository {
     public Map<String, Item> loadItemCatalog() throws DataLoadException {
         Map<String, Item> catalog = new HashMap<>();
         for (String line : readDataLines()) {
-            String[] fields = line.split(FIELD_SEPARATOR, 9);
-            if (fields.length != 9) {
+            String[] fields = line.split(FIELD_SEPARATOR, 6);
+            if (fields.length != 6) {
                 throw new DataLoadException("Malformed line in " + ITEMS_PATH + ": " + line);
             }
 
@@ -39,15 +37,14 @@ public class ItemFileRepository {
             int strengthBonus = parseInt(fields[3], id);
             int magicBonus = parseInt(fields[4], id);
             int agilityBonus = parseInt(fields[5], id);
-            ItemAbility ability = parseAbility(fields[6], fields[7], fields[8], id);
 
             Item item;
             switch (type) {
                 case "WEAPON":
-                    item = new Weapon(id, name, strengthBonus, magicBonus, agilityBonus, ability);
+                    item = new Weapon(id, name, strengthBonus, magicBonus, agilityBonus);
                     break;
                 case "ACCESSORY":
-                    item = new Accessory(id, name, strengthBonus, magicBonus, agilityBonus, ability);
+                    item = new Accessory(id, name, strengthBonus, magicBonus, agilityBonus);
                     break;
                 default:
                     throw new DataLoadException("Unknown item type '" + type + "' for item " + id);
@@ -56,27 +53,6 @@ public class ItemFileRepository {
             catalog.put(id, item);
         }
         return catalog;
-    }
-
-    private ItemAbility parseAbility(String nameField, String chanceField, String bonusField, String itemId)
-            throws DataLoadException {
-        String abilityName = nameField.trim();
-        if (abilityName.equals(NO_ABILITY_MARKER)) {
-            return null;
-        }
-        double chance;
-        int bonusStrength;
-        try {
-            chance = Double.parseDouble(chanceField.trim());
-            bonusStrength = Integer.parseInt(bonusField.trim());
-        } catch (NumberFormatException e) {
-            throw new DataLoadException("Item " + itemId + " has an invalid ability chance/bonus", e);
-        }
-        try {
-            return new ItemAbility(abilityName, chance, bonusStrength);
-        } catch (IllegalArgumentException e) {
-            throw new DataLoadException("Item " + itemId + " has an invalid ability: " + e.getMessage(), e);
-        }
     }
 
     private int parseInt(String field, String itemId) throws DataLoadException {

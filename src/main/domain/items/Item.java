@@ -8,15 +8,13 @@ public abstract class Item {
     private final int strengthBonus;
     private final int magicBonus;
     private final int agilityBonus;
-    private final ItemAbility ability; // nullable - not every item has one
 
-    protected Item(String id, String name, int strengthBonus, int magicBonus, int agilityBonus, ItemAbility ability) {
+    protected Item(String id, String name, int strengthBonus, int magicBonus, int agilityBonus) {
         this.id = id;
         this.name = name;
         this.strengthBonus = strengthBonus;
         this.magicBonus = magicBonus;
         this.agilityBonus = agilityBonus;
-        this.ability = ability;
     }
 
     public String getId() {
@@ -39,14 +37,6 @@ public abstract class Item {
         return agilityBonus;
     }
 
-    public boolean hasAbility() {
-        return ability != null;
-    }
-
-    public ItemAbility getAbility() {
-        return ability;
-    }
-
     // Each concrete item type reports its own kind (e.g. "Weapon", "Accessory").
     public abstract String getItemType();
 
@@ -54,6 +44,6 @@ public abstract class Item {
     public String toString() {
         String base = "[" + getItemType() + "] " + name
                 + " (+" + strengthBonus + " STR, +" + magicBonus + " MAG, +" + agilityBonus + " AGI)";
-        return hasAbility() ? base + " - Ability: " + ability : base;
+        return base;
     }
 }
