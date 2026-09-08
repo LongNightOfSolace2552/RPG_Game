@@ -37,6 +37,10 @@ public class Stats {
         this.agility = requireNonNegative(agility, "Agility");
     }
     
+    public int getPowerLevel() {
+        return strength + magic + agility;
+    }
+    
     private static int requireNonNegative(int value, String fieldName) {
         if(value < 0) {
             throw new IllegalArgumentException(fieldName + " cannot be negative: " + value);
