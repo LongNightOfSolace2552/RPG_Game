@@ -159,7 +159,7 @@ public class Player {
         return new HashSet<>(defeatedBossNodeIds);
     }
     
-    public int getUnallocatedStatsPoints() {
+    public int getUnallocatedStatPoints() {
         return unallocatedStatPoints;
     }
     
