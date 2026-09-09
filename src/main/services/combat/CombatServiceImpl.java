@@ -18,10 +18,10 @@ public class CombatServiceImpl {
     private static final int MIN_STAT_LOSS = 1;
     private static final int MAX_STAT_LOSS = 3;
 
-    private final Randomizer randomizer;
+    private final Randomizer random;
     
-    public CombatServiceImpl(Randomizer randomizer){
-        this.randomizer=randomizer;
+    public CombatServiceImpl(Randomizer random){
+        this.random=random;
     }
     
     // Retrieves the total stats with the raw stats of the player+the stats of the items he is equipping.
@@ -81,8 +81,8 @@ public class CombatServiceImpl {
     }
     
     private CombatResult applyStatLoss(Player player) {
-        double roll = randomizer.nextDouble();
-        int lossAmount = randomizer.nextInt(MAX_STAT_LOSS - MIN_STAT_LOSS + 1) + MIN_STAT_LOSS;
+        double roll = random.nextDouble();
+        int lossAmount = random.nextInt(MAX_STAT_LOSS - MIN_STAT_LOSS + 1) + MIN_STAT_LOSS;
         Stats stats = player.getStats();
 
         if (roll < MAGIC_LOSS_CHANCE) {
@@ -105,7 +105,7 @@ public class CombatServiceImpl {
     
     public CombatResult resolveFight(Player player, Enemy enemy) {
         double winChance = calculateWinChance(player, enemy);
-        boolean won = randomizer.nextDouble() < winChance;
+        boolean won = random.nextDouble() < winChance;
 
         if (won) {
             return new CombatResult(true, null, 0);

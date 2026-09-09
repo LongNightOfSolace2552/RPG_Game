@@ -2,6 +2,7 @@ package main.config;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import main.core.Game;
 import main.core.GameController;
 import main.core.SaveManager;
@@ -18,6 +19,7 @@ import main.persistence.NodeFileRepository;
 import main.persistence.PlayerFileRepository;
 import main.services.travel.TravelService;
 import main.services.travel.TravelServiceImpl;
+import main.services.combat.CombatServiceImpl;
 
 // Dependency wiring for services and repositories.
 public class AppConfig {
@@ -29,6 +31,7 @@ public class AppConfig {
     public Game buildGame() throws DataLoadException {
         FileReaderUtil fileReaderUtil = new FileReaderUtil();
         FileWriterUtil fileWriterUtil = new FileWriterUtil();
+        Random randomizer=new Random();
 
         ItemFileRepository itemFileRepository = new ItemFileRepository(fileReaderUtil);
         Map<String, Item> itemCatalog = itemFileRepository.loadItemCatalog();
@@ -44,6 +47,8 @@ public class AppConfig {
         ConsoleRenderer consoleRenderer = new ConsoleRenderer();
         MenuRenderer menuRenderer = new MenuRenderer();
         CommandParser commandParser = new CommandParser();
+        
+        CombatServiceImpl compbatServiceImpl = new CombatServiceImpl(randomizer);
 
         GameController gameController = new GameController(consoleRenderer, commandParser, saveManager, travelService);
 
