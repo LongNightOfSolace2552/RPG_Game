@@ -20,7 +20,7 @@ public class DialogueFileRepository {
 
     // Reads dialogue_templates.txt and dialogues are added into the hashmap templatesByState.
     // The keys of the hashmap are the enum value of statState.
-    // The arraylist of dialgoues are associated with the respective keys.
+    // The arraylists of DialogueTemplate objects are associated with the respective keys.
     public Map<StatState, List<DialogueTemplate>> loadDialogueTemplates() throws DataLoadException {
         Map<StatState, List<DialogueTemplate>> templatesByState = new HashMap<>();
         for (String line : readDataLines()) {
@@ -46,6 +46,7 @@ public class DialogueFileRepository {
         }
     }
 
+    // Read the lines in dialogue_template.txt, ignores comments and empty lines
     private List<String> readDataLines() throws DataLoadException {
         List<String> result = new ArrayList<>();
         for (String line : fileReaderUtil.readLines(DIALOGUE_TEMPLATES_PATH)) {

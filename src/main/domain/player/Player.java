@@ -8,7 +8,7 @@ import main.domain.items.Item;
 // Player model, including core stats (Strength, Magic, Agility), equipped items, and current node location.
 public class Player {
     private String name;
-    private Stats stats;
+    private final Stats stats;
     private String currentNodeId;
     private final List<Item> inventory = new ArrayList<>();
     private Item equippedItem;

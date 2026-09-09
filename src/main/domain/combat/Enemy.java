@@ -32,14 +32,6 @@ public class Enemy {
         return magicThreshold;
     }
     
-    public boolean isImmuneToStrength(){
-        return strengthThreshold==0;
-    }
-    
-    public boolean isImmuneToMagic(){
-        return magicThreshold==0;
-    }
-    
     @Override
     public String toString(){
         return name + " (STR " + strengthThreshold + ", MAG " + magicThreshold + ")";
