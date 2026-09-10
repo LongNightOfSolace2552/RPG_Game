@@ -1,6 +1,11 @@
 package services;
 
-// Test skeleton for CombatService.
+/**
+ *
+ * @author wxyon
+ */
+
+/* test skeleton for CombatService. */
 public class CombatServiceTest {
 
 }

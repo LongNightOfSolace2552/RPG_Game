@@ -1,5 +1,11 @@
 package main.persistence;
 
+/**
+ *
+ * @author wxyon
+ * @author kyawt
+ */
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,9 +16,9 @@ import main.domain.player.Stats;
 import main.exceptions.DataLoadException;
 import main.exceptions.SaveDataException;
 
-// Loads and saves player data.
+/* loads and saves player data. */
 public class PlayerFileRepository {
-    //create constants used internally by this class
+    /* create constants used internally by this class */
     private static final String KEY_NAME = "name";
     private static final String KEY_STRENGTH = "strength";
     private static final String KEY_MAGIC = "magic";
@@ -95,7 +101,7 @@ public class PlayerFileRepository {
         fileWriterUtil.writeLines(path, lines);
     }
     
-    //joins string together using ','
+    /* joins string together using ',' */
     private String joinItemIds(List<Item> items) {
         List<String> ids = new ArrayList<>();
         for (Item item : items) {
@@ -162,7 +168,7 @@ public class PlayerFileRepository {
         return result;
     }
     
-    //parseKeyValueLines method
+    /* parseKeyValueLines method */
     private Map<String, String> parseKeyValueLines(List<String> lines, String path) throws SaveDataException {
         Map<String, String> values = new HashMap<>();
         
@@ -186,7 +192,7 @@ public class PlayerFileRepository {
         return values;
     }
     
-    //requireValue method
+    /* requireValue method */
     private String requireValue(Map<String, String> values, String key, String path) throws SaveDataException {
         String value = values.get(key);
         if (value == null || value.isEmpty()) {

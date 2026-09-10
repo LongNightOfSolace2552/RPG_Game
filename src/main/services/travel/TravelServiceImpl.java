@@ -1,12 +1,17 @@
 package main.services.travel;
 
+/**
+ *
+ * @author wxyon
+ */
+
 import java.util.Collections;
 import java.util.List;
 import main.domain.player.Player;
 import main.domain.world.Node;
 import main.exceptions.ItemNotFoundException;
 
-// Implementation of TravelService.
+/* implementation of TravelService. */
 public class TravelServiceImpl implements TravelService{
     private final List<Node> nodes;
 

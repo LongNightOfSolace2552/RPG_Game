@@ -1,8 +1,13 @@
 package main.util;
 
+/**
+ *
+ * @author wxyon
+ */
+
 import java.util.Random;
 
-// Random number utilities.
+/* random number utilities. */
 public class Randomizer {
     /*
     Creates a centralized Random access so that the game

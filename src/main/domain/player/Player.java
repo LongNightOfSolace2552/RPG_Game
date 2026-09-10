@@ -1,5 +1,10 @@
 package main.domain.player;
 
+/**
+ *
+ * @author wxyon
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -8,7 +13,7 @@ import main.domain.items.Item;
 import main.domain.items.Weapon;
 import main.util.Randomizer;
 
-// Player model, including core stats (Strength, Magic, Agility), equipped items, and current node location.
+/* player model, including core stats (Strength, Magic, Agility), equipped items, and current node location. */
 public class Player {
     
     private static final int STAT_LOSS_AMOUNT = 1;
@@ -24,14 +29,14 @@ public class Player {
     private final Set<String> defeatedBossNodeIds = new HashSet<>();
     private int unallocatedStatPoints;
     
-    //constructor
+    /* constructor */
     public Player(String name, Stats stats, String currentNodeId) {
         this.name = name;
         this.stats = stats;
         this.currentNodeId = currentNodeId;
     }
     
-    //get method
+    /* get method */
     public String getName() {
         return name;
     }
@@ -44,7 +49,7 @@ public class Player {
         return currentNodeId;
     }
     
-    public Item getEquippedWeapon() {
+    public Weapon getEquippedWeapon() {
         return equippedWeapon;
     }
     
@@ -52,7 +57,7 @@ public class Player {
         return equippedAccessory;
     }
     
-    //set method
+    /* set method */
     public void setName(String name) {
         this.name = name;
     }
@@ -98,6 +103,7 @@ public class Player {
             if (equippedWeapon != null) {
                 inventory.add(equippedWeapon);
             }
+            equippedWeapon = (Weapon) item;
         } else {
             if (equippedAccessory != null) {
                 inventory.add(equippedAccessory);
@@ -107,7 +113,7 @@ public class Player {
         return true;
     }
     
-    //returns the equipped item to the inventory and clears the slot.
+    /* returns the equipped item to the inventory and clears the slot. */
     public void unequipWeapon() {
         if (equippedWeapon == null) {
             return;
@@ -154,7 +160,7 @@ public class Player {
         return defeatedBossNodeIds.contains(nodeId);
     }
 
-    //returns a copy so callers can't mutate defeat progress directly.
+    /* returns a copy so callers can't mutate defeat progress directly. */
     public Set<String> getDefeatedBossNodeIds() {
         return new HashSet<>(defeatedBossNodeIds);
     }

@@ -1,6 +1,11 @@
 package main.domain.world;
 
-// Represents a node the player can travel to; owns its own enemy pool and a boss.
+/**
+ *
+ * @author wxyon
+ */
+
+/* represents a node the player can travel to; owns its own enemy pool and a boss. */
 public class Node {
     private final String id;
     private final NodeLocation location;

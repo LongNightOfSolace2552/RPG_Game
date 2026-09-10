@@ -1,10 +1,15 @@
 package main;
 
+/**
+ *
+ * @author wxyon
+ */
+
 import main.config.AppConfig;
 import main.core.Game;
 import main.exceptions.DataLoadException;
 
-// Main entry point for the RPG game.
+/* main entry point for the RPG game. */
 public class App {
     public static void main(String[] args) {
         AppConfig appConfig = new AppConfig();

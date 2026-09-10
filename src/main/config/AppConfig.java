@@ -1,5 +1,11 @@
 package main.config;
 
+/**
+ *
+ * @author wxyon
+ * @author kyawt
+ */
+
 import java.util.List;
 import java.util.Map;
 import main.core.CombatSequencer;
@@ -10,10 +16,14 @@ import main.cui.CombatRenderer;
 import main.cui.CommandParser;
 import main.cui.ConsoleRenderer;
 import main.cui.MenuRenderer;
+import main.domain.combat.DialogueTemplate;
+import main.domain.combat.DialogueTemplate.StatState;
 import main.domain.combat.Enemy;
+import main.domain.combat.Boss;
 import main.domain.items.Item;
 import main.domain.world.Node;
 import main.exceptions.DataLoadException;
+import main.persistence.DialogueFileRepository;
 import main.persistence.EnemyFileRepository;
 import main.persistence.FileReaderUtil;
 import main.persistence.FileWriterUtil;
@@ -22,10 +32,13 @@ import main.persistence.NodeFileRepository;
 import main.persistence.PlayerFileRepository;
 import main.services.combat.CombatService;
 import main.services.combat.CombatServiceImpl;
+import main.services.combat.DialogueService;
+import main.services.combat.DialogueServiceImpl;
 import main.services.travel.TravelService;
 import main.services.travel.TravelServiceImpl;
 import main.util.Randomizer;
-// Dependency wiring for services and repositories.
+
+/* dependency wiring for services and repositories. */
 public class AppConfig {
     /*
     builds every service and its dependencies in one place.
@@ -50,8 +63,13 @@ public class AppConfig {
 
         EnemyFileRepository enemyFileRepository = new EnemyFileRepository(fileReaderUtil);
         Map<String, List<Enemy>> enemyPoolsByNode = enemyFileRepository.loadEnemyPoolsByNode();
+        Map<String, Boss> bossesByNode = enemyFileRepository.loadBosses();
 
-        CombatService combatService = new CombatServiceImpl(randomizer, itemCatalog);
+        DialogueFileRepository dialogueFileRepository = new DialogueFileRepository(fileReaderUtil);
+        Map<StatState, List<DialogueTemplate>> templatesByState = dialogueFileRepository.loadDialogueTemplates();
+        DialogueService dialogueService = new DialogueServiceImpl(templatesByState);
+
+        CombatService combatService = new CombatServiceImpl(randomizer, itemCatalog, dialogueService);
         CombatRenderer combatRenderer = new CombatRenderer();
         CombatSequencer combatSequencer = new CombatSequencer(combatRenderer);
 
@@ -60,7 +78,7 @@ public class AppConfig {
         CommandParser commandParser = new CommandParser();
 
         GameController gameController = new GameController(consoleRenderer, commandParser, saveManager,
-                travelService, combatService, combatSequencer, enemyPoolsByNode, randomizer);
+                travelService, combatService, combatSequencer, enemyPoolsByNode, bossesByNode, randomizer);
 
         return new Game(consoleRenderer, menuRenderer, commandParser, gameController, saveManager, itemCatalog);
     }

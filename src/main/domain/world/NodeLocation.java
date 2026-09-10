@@ -1,6 +1,11 @@
 package main.domain.world;
 
-// Represents the place/location associated with a node.
+/**
+ *
+ * @author wxyon
+ */
+
+/* represents the place/location associated with a node. */
 public class NodeLocation {
     private final String id;
     private final String name;

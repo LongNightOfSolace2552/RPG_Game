@@ -1,16 +1,24 @@
 package main.persistence;
+
+/**
+ *
+ * @author wxyon
+ */
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import main.exceptions.SaveDataException;
 
-// Writes text files.
-//PlayerFileRepository writes through this class
+/*
+writes text files.
+PlayerFileRepository writes through this class
+*/
 public class FileWriterUtil {
     public void writeLines(String path, List<String> lines) throws SaveDataException {
         try {
-            //converts the file path into text
+            /* converts the file path into text */
             Path target = Path.of(path);
             /*
             a safety condition where it checks to see if the file is 
@@ -21,10 +29,10 @@ public class FileWriterUtil {
                 Files.createDirectories(target.getParent());
             }
             
-            //write to file (Saving to file)
+            /* write to file (Saving to file) */
             Files.write(target, lines);
         } catch (IOException e) {
-            //error handling
+            /* error handling */
             throw new SaveDataException("Could not write file: " + path, e);
         }
     }

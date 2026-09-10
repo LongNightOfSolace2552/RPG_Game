@@ -1,6 +1,11 @@
 package main.util;
 
-// Text formatting helpers.
+/**
+ *
+ * @author wxyon
+ */
+
+/* text formatting helpers. */
 public class TextFormatter {
 
 }

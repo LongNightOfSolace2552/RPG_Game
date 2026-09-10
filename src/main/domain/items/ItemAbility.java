@@ -1,13 +1,20 @@
 package main.domain.items;
 
+/**
+ *
+ * @author wxyon
+ */
+
 import main.util.Randomizer;
 
-// A weapon's special ability: a chance to activate during a battle sequence,
-// granting a temporary stat boost (e.g. +8 Strength) for that battle. When
-// triggered, produces its own dialogue line announcing the activation.
+/*
+a weapon's special ability: a chance to activate during a battle sequence,
+granting a temporary stat boost (e.g. +8 Strength) for that battle. When
+triggered, produces its own dialogue line announcing the activation.
+*/
 public class ItemAbility {
     private final String name;
-    private final double activationChance; // 0.0 - 1.0
+    private final double activationChance; /* 0.0 - 1.0 */
     private final int bonusStrength;
 
     public ItemAbility(String name, double activationChance, int bonusStrength) {
@@ -31,8 +38,10 @@ public class ItemAbility {
         return bonusStrength;
     }
 
-    // Rolls whether this ability triggers this attempt. Combat will call
-    // this once that system exists; not wired up anywhere yet.
+    /*
+    rolls whether this ability triggers this attempt. Combat will call
+    this once that system exists; not wired up anywhere yet.
+    */
     public boolean rollActivation(Randomizer randomizer) {
         return randomizer.nextDouble() < activationChance;
     }

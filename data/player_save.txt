@@ -1,8 +1,0 @@
-name=Test
-strength=5
-magic=5
-agility=5
-currentNodeId=village
-inventory=wooden_dagger,silver_ring
-equippedItem=
-defeatedBosses=

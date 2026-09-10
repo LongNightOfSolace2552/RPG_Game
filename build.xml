@@ -1,82 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="RPGGame" default="default" basedir=".">
-    <description>Builds, tests, and runs the RPGGame project.</description>
+<!-- You may freely edit this file. See commented blocks below for -->
+<!-- some examples of how to customize the build. -->
+<!-- (If you delete it and reopen the project it will be recreated.) -->
+<!-- By default, only the Clean and Build commands use this build script. -->
+<!-- Commands such as Run, Debug, and Test only use this build script if -->
+<!-- the Compile on Save feature is turned off for the project. -->
+<!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
+<!-- in the project's Project Properties dialog box.-->
+<project name="RPG_Game" default="default" basedir=".">
+    <description>Builds, tests, and runs the project RPG_Game.</description>
+    <import file="nbproject/build-impl.xml"/>
+    <!--
 
-    <property name="src.dir"     value="src"/>
-    <property name="test.dir"    value="test"/>
-    <property name="lib.dir"     value="lib"/>
-    <property name="build.dir"   value="build"/>
-    <property name="classes.dir" value="${build.dir}/classes"/>
-    <property name="test-classes.dir" value="${build.dir}/test-classes"/>
-    <property name="dist.dir"    value="dist"/>
-    <property name="main.class"  value="main.App"/>
+    There exist several targets which are by default empty and which can be 
+    used for execution of your tasks. These targets are usually executed 
+    before and after some main targets. They are: 
 
-    <path id="classpath">
-        <fileset dir="${lib.dir}" includes="**/*.jar" erroronmissingdir="false"/>
-    </path>
+      -pre-init:                 called before initialization of project properties
+      -post-init:                called after initialization of project properties
+      -pre-compile:              called before javac compilation
+      -post-compile:             called after javac compilation
+      -pre-compile-single:       called before javac compilation of single file
+      -post-compile-single:      called after javac compilation of single file
+      -pre-compile-test:         called before javac compilation of JUnit tests
+      -post-compile-test:        called after javac compilation of JUnit tests
+      -pre-compile-test-single:  called before javac compilation of single JUnit test
+      -post-compile-test-single: called after javac compilation of single JUunit test
+      -pre-jar:                  called before JAR building
+      -post-jar:                 called after JAR building
+      -post-clean:               called after cleaning build products
 
-    <target name="default" depends="jar" description="Build the project."/>
+    (Targets beginning with '-' are not intended to be called on their own.)
 
-    <target name="init">
-        <mkdir dir="${classes.dir}"/>
-        <mkdir dir="${test-classes.dir}"/>
-        <mkdir dir="${dist.dir}"/>
-    </target>
+    Example of inserting an obfuscator after compilation could look like this:
 
-    <target name="compile" depends="init" description="Compile source code.">
-        <javac srcdir="${src.dir}" destdir="${classes.dir}"
-               classpathref="classpath" includeantruntime="false"
-               release="25"/>
-        <copy todir="${classes.dir}">
-            <fileset dir="${src.dir}" excludes="**/*.java"/>
-        </copy>
-    </target>
+        <target name="-post-compile">
+            <obfuscate>
+                <fileset dir="${build.classes.dir}"/>
+            </obfuscate>
+        </target>
 
-    <target name="compile-tests" depends="compile" description="Compile test code.">
-        <javac srcdir="${test.dir}" destdir="${test-classes.dir}"
-               includeantruntime="false" release="25">
-            <classpath>
-                <path refid="classpath"/>
-                <pathelement location="${classes.dir}"/>
-            </classpath>
-        </javac>
-    </target>
+    For list of available properties check the imported 
+    nbproject/build-impl.xml file. 
 
-    <target name="jar" depends="compile" description="Package into a runnable jar.">
-        <jar destfile="${dist.dir}/${ant.project.name}.jar" basedir="${classes.dir}" manifest="manifest.mf"/>
-    </target>
 
-    <target name="run" depends="jar" description="Run the application.">
-        <java jar="${dist.dir}/${ant.project.name}.jar" fork="true"/>
-    </target>
+    Another way to customize the build is by overriding existing main targets.
+    The targets of interest are: 
 
-    <target name="run-single" depends="compile" description="Run a single class (used by NetBeans' Run File action).">
-        <fail unless="run.class">Must set property 'run.class' to a fully-qualified class name.</fail>
-        <java classname="${run.class}" fork="true">
-            <classpath>
-                <path refid="classpath"/>
-                <pathelement location="${classes.dir}"/>
-            </classpath>
-        </java>
-    </target>
+      -init-macrodef-javac:     defines macro for javac compilation
+      -init-macrodef-junit:     defines macro for junit execution
+      -init-macrodef-debug:     defines macro for class debugging
+      -init-macrodef-java:      defines macro for class execution
+      -do-jar:                  JAR building
+      run:                      execution of project 
+      -javadoc-build:           Javadoc generation
+      test-report:              JUnit report generation
 
-    <target name="test" depends="compile-tests" description="Run tests.">
-        <!-- Requires a JUnit jar (and the Ant JUnit task jar) under lib/ to enable this target. -->
-        <junit printsummary="yes" haltonfailure="no">
-            <classpath>
-                <path refid="classpath"/>
-                <pathelement location="${classes.dir}"/>
-                <pathelement location="${test-classes.dir}"/>
-            </classpath>
-            <formatter type="brief" usefile="false"/>
-            <batchtest>
-                <fileset dir="${test-classes.dir}" includes="**/*Test.class"/>
-            </batchtest>
-        </junit>
-    </target>
+    An example of overriding the target for project execution could look like this:
 
-    <target name="clean" description="Clean build artifacts.">
-        <delete dir="${build.dir}"/>
-        <delete dir="${dist.dir}"/>
-    </target>
+        <target name="run" depends="RPG_Game-impl.jar">
+            <exec dir="bin" executable="launcher.exe">
+                <arg file="${dist.jar}"/>
+            </exec>
+        </target>
+
+    Notice that the overridden target depends on the jar target and not only on 
+    the compile target as the regular run target does. Again, for a list of available 
+    properties which you can use, check the target you are overriding in the
+    nbproject/build-impl.xml file. 
+
+    -->
 </project>

@@ -1,5 +1,10 @@
 package main.core;
 
+/**
+ *
+ * @author wxyon
+ */
+
 import java.util.List;
 import main.cui.CombatRenderer;
 

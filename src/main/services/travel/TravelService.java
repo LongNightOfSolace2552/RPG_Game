@@ -1,12 +1,19 @@
 package main.services.travel;
 
+/**
+ *
+ * @author wxyon
+ */
+
 import java.util.List;
 import main.domain.player.Player;
 import main.domain.world.Node;
 import main.exceptions.ItemNotFoundException;
 
-// Interface for moving the player between nodes.
-//(if it is unlocked after defeating the boss)
+/*
+interface for moving the player between nodes.
+(if it is unlocked after defeating the boss)
+*/
 public interface TravelService {
     List<Node> listNodes();
 

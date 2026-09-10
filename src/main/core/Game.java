@@ -1,5 +1,10 @@
 package main.core;
 
+/**
+ *
+ * @author wxyon
+ */
+
 import java.util.Map;
 import main.cui.CommandParser;
 import main.cui.ConsoleRenderer;
@@ -15,10 +20,12 @@ Main game loop; presents the top-level menu
 (Travel, Node, Dungeon, Stats/Inventory) and routes player input.
 */
 public class Game {
-    private static final int DEFAULT_STAT_VALUE = 5;
+    private static final int DEFAULT_STAT_VALUE = 0;
     private static final String DEFAULT_STARTING_NODE_ID = "village";
-    // A couple of starter items so equip/unequip and save/load of an
-    // owned+equipped item are testable right away.
+    /*
+    a couple of starter items so equip/unequip and save/load of an
+    owned+equipped item are testable right away.
+    */
     private static final String[] STARTER_ITEM_IDS = {"wooden_dagger", "silver_ring"};
 
     private final ConsoleRenderer consoleRenderer;
@@ -57,9 +64,11 @@ public class Game {
     }
 
     private Player initializePlayer() {
-        if (saveManager.hasSave()) {
+        String player_name = commandParser.readLine("Enter your player name: ");
+        
+        if (saveManager.hasSave(player_name)) {
             try {
-                Player player = saveManager.loadPlayer();
+                Player player = saveManager.loadPlayer(player_name);
                 consoleRenderer.printMessage("Welcome back, " + player.getName() + "!");
                 return player;
             } catch (SaveDataException e) {
@@ -67,18 +76,18 @@ public class Game {
                 consoleRenderer.printMessage("Starting a new game instead.");
             }
         }
-        return createNewPlayer();
+        return createNewPlayer(player_name);
     }
 
-    private Player createNewPlayer() {
-        String name = commandParser.readLine("Enter your character's name: ");
+    private Player createNewPlayer(String player_name) {
         Stats startingStats = new Stats(DEFAULT_STAT_VALUE, DEFAULT_STAT_VALUE, DEFAULT_STAT_VALUE);
-        Player player = new Player(name, startingStats, DEFAULT_STARTING_NODE_ID);
+        Player player = new Player(player_name, startingStats, DEFAULT_STARTING_NODE_ID);
 
         for (String itemId : STARTER_ITEM_IDS) {
             Item item = itemCatalog.get(itemId);
             if (item != null) {
                 player.addItem(item);
+                player.equip(item);
             } else {
                 consoleRenderer.printError("Starter item '" + itemId + "' is missing from the item catalog.");
             }

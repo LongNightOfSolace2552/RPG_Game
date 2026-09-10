@@ -1,5 +1,10 @@
 package main.persistence;
 
+/**
+ *
+ * @author wxyon
+ */
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,7 +13,7 @@ import main.domain.world.Node;
 import main.domain.world.NodeLocation;
 import main.exceptions.DataLoadException;
 
-// Loads nodes, their locations, and their enemy pools from text files.
+/* loads nodes, their locations, and their enemy pools from text files. */
 public class NodeFileRepository {
     private static final String LOCATIONS_PATH = "data/node_locations.txt";
     private static final String NODES_PATH = "data/nodes.txt";
@@ -20,7 +25,7 @@ public class NodeFileRepository {
         this.fileReaderUtil = fileReaderUtil;
     }
 
-    // node_locations.txt format: id|name|description
+    /* node_locations.txt format: id|name|description */
     public Map<String, NodeLocation> loadNodeLocations() throws DataLoadException {
         Map<String, NodeLocation> locations = new HashMap<>();
         for (String line : readDataLines(LOCATIONS_PATH)) {
@@ -36,7 +41,7 @@ public class NodeFileRepository {
         return locations;
     }
 
-    // nodes.txt format: id|locationId|difficulty|hasBoss
+    /* nodes.txt format: id|locationId|difficulty|hasBoss */
     public List<Node> loadNodes() throws DataLoadException {
         Map<String, NodeLocation> locations = loadNodeLocations();
         List<Node> nodes = new ArrayList<>();

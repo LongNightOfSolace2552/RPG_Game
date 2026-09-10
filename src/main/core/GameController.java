@@ -1,12 +1,19 @@
 package main.core;
 
+/**
+ *
+ * @author wxyon
+ * @author kyawt
+ */
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import main.cui.CommandParser;
 import main.cui.ConsoleRenderer;
-import main.domain.combat.BattleResult;
+import main.domain.combat.CombatResult;
+import main.domain.combat.Dungeon;
 import main.domain.combat.Enemy;
 import main.domain.items.Item;
 import main.domain.player.Player;
@@ -19,7 +26,7 @@ import main.services.combat.CombatService;
 import main.services.travel.TravelService;
 import main.util.Randomizer;
 
-// Orchestrates services and CUI rendering in response to player actions.
+/* orchestrates services and CUI rendering in response to player actions. */
 public class GameController {
 
     private final ConsoleRenderer consoleRenderer;
@@ -45,9 +52,11 @@ public class GameController {
         this.randomizer = randomizer;
     }
 
-    // Renders the status header for the player's current node. Falls back
-    // to a plain message if the player's saved node id no longer exists
-    // in the node data (e.g. node data changed since the save was made).
+    /*
+    renders the status header for the player's current node. Falls back
+    to a plain message if the player's saved node id no longer exists
+    in the node data (e.g. node data changed since the save was made).
+    */
     public void renderHeader(Player player) {
         try {
             Node currentNode = travelService.findNode(player.getCurrentNodeId());
@@ -57,7 +66,7 @@ public class GameController {
         }
     }
 
-    // Returns true if the game loop should stop after this action.
+    /* returns true if the game loop should stop after this action. */
     public boolean handle(int choice, Player player) throws InvalidCommandException {
         switch (choice) {
             case 1:
@@ -75,8 +84,10 @@ public class GameController {
             case 5:
                 return saveAndQuit(player);
             default:
-                // CommandParser already restricts choice to a valid range,
-                // so this should be unreachable.
+                /*
+                commandParser already restricts choice to a valid range,
+                so this should be unreachable.
+                */
                 consoleRenderer.printError("Unknown option: " + choice);
                 return false;
         }
@@ -130,11 +141,13 @@ public class GameController {
         }
     }
 
-    // Dungeon menu: explore for a random enemy from the current node's
-    // pool, challenge the node's boss (still a placeholder - real boss
-    // stats/combat aren't implemented), or leave. Both options are shown
-    // even when unavailable, with a message explaining why, rather than
-    // hiding them.
+    /*
+    dungeon menu: explore for a random enemy from the current node's
+    pool (one fight, then back to this menu), challenge the node's boss,
+    fight continuously until a loss, or leave. both fight options are
+    shown even when the node has no enemies, with a message explaining
+    why, rather than hiding them.
+    */
     private void handleDungeon(Player player) throws InvalidCommandException {
         Node currentNode;
         try {
@@ -150,38 +163,49 @@ public class GameController {
             return;
         }
 
+        /*
+        a fresh Dungeon per visit - floor progress is not saved between
+        dungeon sessions, so re-entering later starts back at floor 1.
+        */
+        Dungeon dungeon = new Dungeon(randomizer, enemyPoolsByNode, currentNode.getId());
+
         boolean inDungeon = true;
         while (inDungeon) {
             consoleRenderer.printMessage("");
-            consoleRenderer.printMessage("You are in the dungeon at " + currentNode.getName() + ".");
-            consoleRenderer.printMessage("[1]: Explore   [2]: Challenge the boss   [3]: Leave the dungeon");
-            int choice = commandParser.readChoiceInRange(1, 3);
+            consoleRenderer.printMessage("You are in the dungeon at " + currentNode.getName()
+                    + " - Floor " + dungeon.getFloor() + ".");
+            consoleRenderer.printMessage("[1]: Explore   [2]: Challenge the boss   "
+                    + "[3]: Fight until the end   [4]: Leave the dungeon");
+            int choice = commandParser.readChoiceInRange(1, 4);
 
             switch (choice) {
                 case 1:
-                    handleExplore(player, currentNode, pool);
+                    handleExplore(player, dungeon);
                     break;
                 case 2:
                     handleBossChallenge(player, currentNode);
                     break;
                 case 3:
+                    handleFightUntilEnd(player, dungeon);
+                    break;
+                case 4:
                     inDungeon = false;
                     break;
                 default:
-                    // readChoiceInRange already restricts to 1-3.
+                    /* readChoiceInRange already restricts to 1-4. */
                     break;
             }
         }
     }
 
-    private void handleExplore(Player player, Node currentNode, List<Enemy> pool) throws InvalidCommandException {
-        if (pool.isEmpty()) {
+    private void handleExplore(Player player, Dungeon dungeon) throws InvalidCommandException {
+        Enemy enemy = dungeon.nextEnemy();
+        if (enemy == null) {
             consoleRenderer.printMessage("There are no enemies to find here yet.");
             return;
         }
 
-        Enemy enemy = pool.get(randomizer.nextInt(pool.size()));
-        consoleRenderer.printMessage("A " + enemy.getName() + " appears!");
+        consoleRenderer.printMessage("A " + enemy.getName() + " appears! (Floor " + dungeon.getFloor() + ")");
         consoleRenderer.printMessage("[1]: Fight   [2]: Retreat");
         int choice = commandParser.readChoiceInRange(1, 2);
 
@@ -190,11 +214,61 @@ public class GameController {
             return;
         }
 
-        BattleResult result = combatService.fight(player, enemy);
+        CombatResult result = combatService.resolveFight(player, enemy);
         combatSequencer.play(result.getDialogueLines());
 
         if (result.hasDroppedItem()) {
             player.addItem(result.getDroppedItem());
+        }
+
+        if (result.isWon()) {
+            advanceFloorIfCleared(dungeon);
+        } else {
+            dungeon.resetProgress();
+            consoleRenderer.printMessage("Your dungeon progress resets - back to Floor 1.");
+        }
+    }
+
+    /*
+    auto-chains fights with no per-fight prompt, one after another,
+    until the player loses. Each win still checks for floor advancement
+    and drops, same as a single Explore fight.
+    */
+    private void handleFightUntilEnd(Player player, Dungeon dungeon) {
+        consoleRenderer.printMessage("You press onward, fighting without pause...");
+
+        boolean continueFighting = true;
+        while (continueFighting) {
+            Enemy enemy = dungeon.nextEnemy();
+            if (enemy == null) {
+                consoleRenderer.printMessage("There are no enemies to find here yet.");
+                return;
+            }
+
+            consoleRenderer.printMessage("A " + enemy.getName() + " appears! (Floor " + dungeon.getFloor() + ")");
+            CombatResult result = combatService.resolveFight(player, enemy);
+            combatSequencer.play(result.getDialogueLines());
+
+            if (result.hasDroppedItem()) {
+                player.addItem(result.getDroppedItem());
+            }
+
+            if (result.isWon()) {
+                advanceFloorIfCleared(dungeon);
+            } else {
+                dungeon.resetProgress();
+                consoleRenderer.printMessage("Your dungeon progress resets - back to Floor 1.");
+                consoleRenderer.printMessage("You can no longer continue - returning to the dungeon menu.");
+                continueFighting = false;
+            }
+        }
+    }
+
+    private void advanceFloorIfCleared(Dungeon dungeon) {
+        int floorBefore = dungeon.getFloor();
+        dungeon.recordVictory();
+        if (dungeon.getFloor() > floorBefore) {
+            consoleRenderer.printMessage("You've cleared this floor! Descending to Floor " + dungeon.getFloor() + ".");
         }
     }
 
@@ -245,7 +319,7 @@ public class GameController {
                     back = true;
                     break;
                 default:
-                    // readChoiceInRange already restricts to 1-5.
+                    /* readChoiceInRange already restricts to 1-5. */
                     break;
             }
         }
@@ -292,9 +366,11 @@ public class GameController {
         consoleRenderer.printMessage("Unequipped " + name + ".");
     }
 
-    // Lets the player spend banked stat points (earned from defeated
-    // enemies) one at a time, stopping whenever they choose or when the
-    // points run out.
+    /*
+    lets the player spend banked stat points (earned from defeated
+    enemies) one at a time, stopping whenever they choose or when the
+    points run out.
+    */
     private void handleAllocateStatPoints(Player player) throws InvalidCommandException {
         if (player.getUnallocatedStatPoints() <= 0) {
             consoleRenderer.printMessage("You have no stat points to allocate.");
@@ -329,7 +405,7 @@ public class GameController {
 
     private boolean saveAndQuit(Player player) {
         try {
-            saveManager.savePlayer(player);
+            saveManager.savePlayer(player, player.getName());
             consoleRenderer.printMessage("Progress saved. Goodbye, " + player.getName() + "!");
         } catch (SaveDataException e) {
             consoleRenderer.printError("Could not save your progress: " + e.getMessage());

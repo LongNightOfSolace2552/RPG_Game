@@ -1,6 +1,11 @@
 package main.cui;
 
-// Renders the main menu: [1] Travel, [2] Node, [3] Dungeon, [4] Stats/Inventory.
+/**
+ *
+ * @author wxyon
+ */
+
+/* renders the main menu: [1] Travel, [2] Node, [3] Dungeon, [4] Stats/Inventory. */
 public class MenuRenderer {
     public void printMainMenu() {
         System.out.println();

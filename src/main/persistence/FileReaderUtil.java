@@ -1,4 +1,10 @@
 package main.persistence;
+
+/**
+ *
+ * @author wxyon
+ */
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -6,7 +12,7 @@ import java.util.List;
 import main.exceptions.DataLoadException;
 
 
-// Reads text files.
+/* reads text files. */
 public class FileReaderUtil {
     public List<String> readLines(String path) throws DataLoadException {
         try {

@@ -1,14 +1,22 @@
 package main.domain.items;
 
-// Abstract base for anything a player can hold or equip (weapons, rings,
-// amulets, etc.). Concrete item types provide their own stat-bonus behavior.
+/**
+ *
+ * @author wxyon
+ * @author kyawt
+ */
+
+/*
+abstract base for anything a player can hold or equip (weapons, rings,
+amulets, etc.). Concrete item types provide their own stat-bonus behavior.
+*/
 public abstract class Item {
     private final String id;
     private final String name;
     private final int strengthBonus;
     private final int magicBonus;
     private final int agilityBonus;
-    private final ItemAbility ability; // nullable - not every item has one
+    private final ItemAbility ability; /* nullable - not every item has one */
 
     protected Item(String id, String name, int strengthBonus, int magicBonus, int agilityBonus, ItemAbility ability) {
         this.id = id;
@@ -47,7 +55,7 @@ public abstract class Item {
         return ability;
     }
 
-    // Each concrete item type reports its own kind (e.g. "Weapon", "Accessory").
+    /* each concrete item type reports its own kind (e.g. "Weapon", "Accessory"). */
     public abstract String getItemType();
 
     @Override

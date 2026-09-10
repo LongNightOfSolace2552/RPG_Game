@@ -1,6 +1,18 @@
 package main.services.combat;
 
-// Interface for selecting a dialogue template based on the stat-ratio difference between player and enemy, and forming the resulting sentence.
-public interface DialogueService {
+/**
+ *
+ * @author wxyon
+ * @author kyawt
+ */
 
+import java.util.List;
+import main.domain.combat.DialogueTemplate.StatState;
+
+/*
+interface for selecting dialogue templates based on the given StatState,
+and forming the resulting sentences with the player's and enemy's names.
+*/
+public interface DialogueService {
+    List<String> buildBattleLines(StatState statState, String playerName, String enemyName);
 }
