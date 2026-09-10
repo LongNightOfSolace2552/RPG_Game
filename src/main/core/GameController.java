@@ -15,6 +15,7 @@ import main.cui.ConsoleRenderer;
 import main.domain.combat.CombatResult;
 import main.domain.combat.Dungeon;
 import main.domain.combat.Enemy;
+import main.domain.combat.Boss;
 import main.domain.items.Item;
 import main.domain.player.Player;
 import main.domain.player.StatType;
@@ -36,12 +37,14 @@ public class GameController {
     private final CombatService combatService;
     private final CombatSequencer combatSequencer;
     private final Map<String, List<Enemy>> enemyPoolsByNode;
+    private final Map<String, Boss> bossesByNode;
     private final Randomizer randomizer;
 
     public GameController(ConsoleRenderer consoleRenderer, CommandParser commandParser,
                            SaveManager saveManager, TravelService travelService,
                            CombatService combatService, CombatSequencer combatSequencer,
-                           Map<String, List<Enemy>> enemyPoolsByNode, Randomizer randomizer) {
+                           Map<String, List<Enemy>> enemyPoolsByNode, Map<String, Boss> bossesByNode,
+                           Randomizer randomizer) {
         this.consoleRenderer = consoleRenderer;
         this.commandParser = commandParser;
         this.saveManager = saveManager;
@@ -49,6 +52,7 @@ public class GameController {
         this.combatService = combatService;
         this.combatSequencer = combatSequencer;
         this.enemyPoolsByNode = enemyPoolsByNode;
+        this.bossesByNode = bossesByNode;
         this.randomizer = randomizer;
     }
 

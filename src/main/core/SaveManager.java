@@ -68,7 +68,8 @@ public class SaveManager {
     example: there are no capital letters*/
     private String clean_up(String profileName) {
         /*
-        " ^ " this means to match anything that is not one of the characters 
+        " ^ " as the first character inside the brackets nullify the 
+        set, so to match anything that is not one of the characters 
         stated.
         
         accepts: a-zA-Z means any letter, 0-9 is any digit, " _ " is underscore and
