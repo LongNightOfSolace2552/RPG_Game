@@ -2,6 +2,8 @@ package main.core;
 
 /**
  *
+ * @author wxyon
+ * @author kyawt
  */
 
 import java.util.ArrayList;
@@ -18,7 +20,6 @@ import main.domain.items.Item;
 import main.domain.player.Player;
 import main.domain.player.StatType;
 import main.domain.world.Node;
-import main.exceptions.InvalidCommandException;
 import main.exceptions.ItemNotFoundException;
 import main.exceptions.SaveDataException;
 import main.services.combat.CombatService;
@@ -69,7 +70,7 @@ public class GameController {
     }
 
     /* returns true if the game loop should stop after this action. */
-    public boolean handle(int choice, Player player) throws InvalidCommandException {
+    public boolean handle(int choice, Player player) {
         switch (choice) {
             case 1:
                 handleTravel(player);
@@ -95,7 +96,7 @@ public class GameController {
         }
     }
 
-    private void handleTravel(Player player) throws InvalidCommandException {
+    private void handleTravel(Player player) {
         List<Node> nodes = travelService.listNodes();
         if (nodes.isEmpty()) {
             consoleRenderer.printMessage("There is nowhere to travel to.");
@@ -108,7 +109,7 @@ public class GameController {
         }
 
         consoleRenderer.printNodeList(nodes, locked);
-        int choice = commandParser.readChoiceInRange(0, nodes.size());
+        int choice = commandParser.readValidChoice(0, nodes.size());
         if (choice == 0) {
             consoleRenderer.printMessage("Travel cancelled.");
             return;
@@ -150,7 +151,7 @@ public class GameController {
     shown even when the node has no enemies, with a message explaining
     why, rather than hiding them.
     */
-    private void handleDungeon(Player player) throws InvalidCommandException {
+    private void handleDungeon(Player player) {
         Node currentNode;
         try {
             currentNode = travelService.findNode(player.getCurrentNodeId());
@@ -178,7 +179,7 @@ public class GameController {
                     + " - Floor " + dungeon.getFloor() + ".");
             consoleRenderer.printMessage("[1]: Explore   [2]: Challenge the boss   "
                     + "[3]: Fight until the end   [4]: Leave the dungeon");
-            int choice = commandParser.readChoiceInRange(1, 4);
+            int choice = commandParser.readValidChoice(1, 4);
 
             switch (choice) {
                 case 1:
@@ -194,13 +195,13 @@ public class GameController {
                     inDungeon = false;
                     break;
                 default:
-                    /* readChoiceInRange already restricts to 1-4. */
+                    /* readValidChoice already restricts to 1-4. */
                     break;
             }
         }
     }
 
-    private void handleExplore(Player player, Dungeon dungeon) throws InvalidCommandException {
+    private void handleExplore(Player player, Dungeon dungeon) {
         Enemy enemy = dungeon.nextEnemy();
         if (enemy == null) {
             consoleRenderer.printMessage("There are no enemies to find here yet.");
@@ -209,7 +210,7 @@ public class GameController {
 
         consoleRenderer.printMessage("A " + enemy.getName() + " appears! (Floor " + dungeon.getFloor() + ")");
         consoleRenderer.printMessage("[1]: Fight   [2]: Retreat");
-        int choice = commandParser.readChoiceInRange(1, 2);
+        int choice = commandParser.readValidChoice(1, 2);
 
         if (choice == 2) {
             consoleRenderer.printMessage("You retreat before the fight begins.");
@@ -274,7 +275,7 @@ public class GameController {
         }
     }
 
-    private void handleBossChallenge(Player player, Node currentNode) throws InvalidCommandException {
+    private void handleBossChallenge(Player player, Node currentNode) {
         if (!currentNode.hasBoss()) {
             consoleRenderer.printMessage("This node has no boss.");
             return;
@@ -293,7 +294,7 @@ public class GameController {
 
         consoleRenderer.printMessage("A " + boss.getName() + " blocks your path.");
         consoleRenderer.printMessage("[1]: Fight   [2]: Retreat");
-        int choice = commandParser.readChoiceInRange(1, 2);
+        int choice = commandParser.readValidChoice(1, 2);
 
         if (choice == 2) {
             consoleRenderer.printMessage("You retreat.");
@@ -313,12 +314,12 @@ public class GameController {
         }
     }
 
-    private void handleInventory(Player player) throws InvalidCommandException {
+    private void handleInventory(Player player) {
         boolean back = false;
         while (!back) {
             consoleRenderer.printStats(player);
             consoleRenderer.printInventoryMenu();
-            int choice = commandParser.readChoiceInRange(1, 5);
+            int choice = commandParser.readValidChoice(1, 5);
             switch (choice) {
                 case 1:
                     handleEquip(player);
@@ -336,13 +337,13 @@ public class GameController {
                     back = true;
                     break;
                 default:
-                    /* readChoiceInRange already restricts to 1-5. */
+                    /* readValidChoice already restricts to 1-5. */
                     break;
             }
         }
     }
 
-    private void handleEquip(Player player) throws InvalidCommandException {
+    private void handleEquip(Player player) {
         List<Item> inventory = player.getInventory();
         if (inventory.isEmpty()) {
             consoleRenderer.printMessage("Your inventory is empty.");
@@ -350,7 +351,7 @@ public class GameController {
         }
 
         consoleRenderer.printItemList(inventory);
-        int choice = commandParser.readChoiceInRange(0, inventory.size());
+        int choice = commandParser.readValidChoice(0, inventory.size());
         if (choice == 0) {
             return;
         }
@@ -388,7 +389,7 @@ public class GameController {
     enemies) one at a time, stopping whenever they choose or when the
     points run out.
     */
-    private void handleAllocateStatPoints(Player player) throws InvalidCommandException {
+    private void handleAllocateStatPoints(Player player) {
         if (player.getUnallocatedStatPoints() <= 0) {
             consoleRenderer.printMessage("You have no stat points to allocate.");
             return;
@@ -397,7 +398,7 @@ public class GameController {
         while (player.getUnallocatedStatPoints() > 0) {
             consoleRenderer.printMessage("Unallocated points: " + player.getUnallocatedStatPoints());
             consoleRenderer.printMessage("[1]: Strength   [2]: Magic   [3]: Agility   [0]: Stop");
-            int choice = commandParser.readChoiceInRange(0, 3);
+            int choice = commandParser.readValidChoice(0, 3);
             if (choice == 0) {
                 return;
             }

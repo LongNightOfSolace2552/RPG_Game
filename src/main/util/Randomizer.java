@@ -2,6 +2,7 @@ package main.util;
 
 /**
  *
+ * @author wxyon
  */
 
 import java.util.Random;

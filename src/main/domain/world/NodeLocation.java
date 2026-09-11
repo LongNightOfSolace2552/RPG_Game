@@ -2,6 +2,7 @@ package main.domain.world;
 
 /**
  *
+ * @author wxyon
  */
 
 /* represents the place/location associated with a node. */

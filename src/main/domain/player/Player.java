@@ -2,6 +2,7 @@ package main.domain.player;
 
 /**
  *
+ * @author wxyon
  */
 
 import java.util.ArrayList;

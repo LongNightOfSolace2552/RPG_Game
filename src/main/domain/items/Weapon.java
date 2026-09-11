@@ -2,6 +2,8 @@ package main.domain.items;
 
 /**
  *
+ * @author wxyon
+ * @author kyawt
  */
 
 /* weapon item; a concrete Item that can carry a WeaponAbility. */

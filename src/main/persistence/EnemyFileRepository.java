@@ -2,6 +2,8 @@ package main.persistence;
 
 /**
  *
+ * @author wxyon
+ * @author kyawt
  */
 
 import java.util.ArrayList;
@@ -39,18 +41,17 @@ public class EnemyFileRepository {
     type is MONSTER or BOSS. "-" means no value (0 for numeric fields, null for itemDropId).
     */
     public Map<String, List<Enemy>> loadEnemyPoolsByNode() throws DataLoadException {
-        
-        Map<String, List<Enemy>> enemyPools = new HashMap<>();
+        Map<String, List<Enemy>> pools = new HashMap<>();
 
         for (String[] fields : readDataRows()) {
             if (!isType(fields, MONSTER_TYPE)) {
                 continue;
             }
             String nodeId = fields[0].trim();
-            //Generated with assistance from Claude
-            enemyPools.computeIfAbsent(nodeId, key -> new ArrayList<>()).add(buildEnemy(fields));
+            pools.computeIfAbsent(nodeId, key -> new ArrayList<>()).add(buildEnemy(fields));
         }
-        return enemyPools;
+
+        return pools;
     }
 
     /*

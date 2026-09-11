@@ -2,6 +2,7 @@ package main.exceptions;
 
 /**
  *
+ * @author wxyon
  */
 
 /*

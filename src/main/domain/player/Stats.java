@@ -2,6 +2,7 @@ package main.domain.player;
 
 /**
  *
+ * @author wxyon
  */
 
 /* holds a set of Strength, Magic, and Agility values, shared by players and enemies. */

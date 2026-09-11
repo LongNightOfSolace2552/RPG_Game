@@ -2,6 +2,7 @@ package main.core;
 
 /**
  *
+ * @author wxyon
  */
 
 import java.util.Map;
@@ -11,7 +12,6 @@ import main.cui.MenuRenderer;
 import main.domain.items.Item;
 import main.domain.player.Player;
 import main.domain.player.Stats;
-import main.exceptions.InvalidCommandException;
 import main.exceptions.SaveDataException;
 
 /*
@@ -53,12 +53,8 @@ public class Game {
             gameController.renderHeader(player);
             menuRenderer.printMainMenu();
 
-            try {
-                int choice = commandParser.readMenuChoice();
-                running = !gameController.handle(choice, player);
-            } catch (InvalidCommandException e) {
-                consoleRenderer.printError(e.getMessage());
-            }
+            int choice = commandParser.readMenuChoice();
+            running = !gameController.handle(choice, player);
         }
     }
 

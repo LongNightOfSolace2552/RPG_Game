@@ -2,6 +2,7 @@ package main.cui;
 
 /**
  *
+ * @author wxyon
  */
 
 import java.util.Scanner;
@@ -14,8 +15,13 @@ public class CommandParser {
 
     private final Scanner scanner = new Scanner(System.in);
 
-    public int readMenuChoice() throws InvalidCommandException {
-        return readChoiceInRange(MIN_MENU_CHOICE, MAX_MENU_CHOICE);
+    /*
+    reads a valid main-menu choice. Never throws - a mistyped
+    character just re-prompts for the main menu itself, instead of
+    bubbling up and being mistaken for a different kind of failure.
+    */
+    public int readMenuChoice() {
+        return readValidChoice(MIN_MENU_CHOICE, MAX_MENU_CHOICE);
     }
 
     /*
@@ -38,6 +44,22 @@ public class CommandParser {
         }
 
         return choice;
+    }
+
+    /*
+    reads a choice in [min, max], retrying and re-prompting on invalid
+    input instead of throwing - so a single mistyped character in any
+    menu (dungeon, inventory, travel, and so on) can never unwind out
+    of that menu and lose whatever progress was local to it.
+    */
+    public int readValidChoice(int min, int max) {
+        while (true) {
+            try {
+                return readChoiceInRange(min, max);
+            } catch (InvalidCommandException e) {
+                System.out.println("[Error] " + e.getMessage());
+            }
+        }
     }
 
     public String readLine(String prompt) {

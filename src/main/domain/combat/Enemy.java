@@ -2,6 +2,8 @@ package main.domain.combat;
 
 /**
  *
+ * @author wxyon
+ * @author kyawt
  */
 
 /* import Stats from player since enemies uses the same Stats */

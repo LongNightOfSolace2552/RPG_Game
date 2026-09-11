@@ -2,6 +2,7 @@ package main.core;
 
 /**
  *
+ * @author wxyon
  */
 
 import main.domain.player.Player;
