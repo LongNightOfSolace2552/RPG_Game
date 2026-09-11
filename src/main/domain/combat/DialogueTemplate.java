@@ -1,11 +1,5 @@
 package main.domain.combat;
 
-/**
- *
- * @author wxyon
- * @author kyawt
- */
-
 /*
 a single dialogue template: which StatState it applies to (how the fight
 is going for the player relative to the enemy), and a sentence pattern

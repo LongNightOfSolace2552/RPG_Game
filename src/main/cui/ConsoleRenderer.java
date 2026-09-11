@@ -1,11 +1,5 @@
 package main.cui;
 
-/**
- *
- * @author wxyon
- * @author kyawt
- */
-
 import java.util.ArrayList;
 import java.util.List;
 import main.domain.items.Item;

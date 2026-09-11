@@ -1,11 +1,5 @@
 package main.domain.combat;
 
-/**
- *
- * @author wxyon
- * @author kyawt
- */
-
 import java.util.List;
 import java.util.Map;
 import main.util.Randomizer;

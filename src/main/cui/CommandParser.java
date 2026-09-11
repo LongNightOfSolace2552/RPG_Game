@@ -1,10 +1,5 @@
 package main.cui;
 
-/**
- *
- * @author wxyon
- */
-
 import java.util.Scanner;
 import main.exceptions.InvalidCommandException;
 

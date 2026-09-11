@@ -1,10 +1,5 @@
 package main.exceptions;
 
-/**
- *
- * @author wxyon
- */
-
 /*
 base checked exception for domain-level game errors. Specific failure
 cases are represented by subclasses so callers can catch and handle them

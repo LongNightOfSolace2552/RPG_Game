@@ -1,11 +1,5 @@
 package main.domain.combat;
 
-/**
- *
- * @author wxyon
- * @author kyawt
- */
-
 import main.domain.player.Stats;
 
 /*

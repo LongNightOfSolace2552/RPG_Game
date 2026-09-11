@@ -1,10 +1,5 @@
 package main.domain.player;
 
-/**
- *
- * @author wxyon
- */
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

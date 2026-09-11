@@ -1,10 +1,5 @@
 package main.exceptions;
 
-/**
- *
- * @author wxyon
- */
-
 /*
 thrown when a referenced item, enemy, node, or dialogue template ID does
 not exist in the loaded data.

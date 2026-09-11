@@ -1,10 +1,5 @@
 package main.core;
 
-/**
- *
- * @author wxyon
- */
-
 import java.util.Map;
 import main.cui.CommandParser;
 import main.cui.ConsoleRenderer;

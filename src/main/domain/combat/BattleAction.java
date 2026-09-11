@@ -1,11 +1,5 @@
 package main.domain.combat;
 
-/**
- *
- * @author wxyon
- * @author kyawt
- */
-
 /*
 one resolved step of a battle sequence: the final formed sentence to
 display. paired with DialogueTemplate/DialogueService, which build these

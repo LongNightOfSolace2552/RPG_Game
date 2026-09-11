@@ -1,10 +1,5 @@
 package main.core;
 
-/**
- *
- * @author wxyon
- */
-
 import main.domain.player.Player;
 import main.exceptions.SaveDataException;
 import main.persistence.PlayerFileRepository;

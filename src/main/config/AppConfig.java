@@ -1,11 +1,5 @@
 package main.config;
 
-/**
- *
- * @author wxyon
- * @author kyawt
- */
-
 import java.util.List;
 import java.util.Map;
 import main.core.CombatSequencer;

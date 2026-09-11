@@ -1,10 +1,5 @@
 package main.domain.items;
 
-/**
- *
- * @author wxyon
- */
-
 import main.util.Randomizer;
 
 /*

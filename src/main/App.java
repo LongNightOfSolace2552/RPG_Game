@@ -1,10 +1,5 @@
 package main;
 
-/**
- *
- * @author wxyon
- */
-
 import main.config.AppConfig;
 import main.core.Game;
 import main.exceptions.DataLoadException;

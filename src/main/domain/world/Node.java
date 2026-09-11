@@ -1,10 +1,5 @@
 package main.domain.world;
 
-/**
- *
- * @author wxyon
- */
-
 /* represents a node the player can travel to; owns its own enemy pool and a boss. */
 public class Node {
     private final String id;

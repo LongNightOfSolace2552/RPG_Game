@@ -1,11 +1,5 @@
 package main.domain.items;
 
-/**
- *
- * @author wxyon
- * @author kyawt
- */
-
 /*
 abstract base for anything a player can hold or equip (weapons, rings,
 amulets, etc.). Concrete item types provide their own stat-bonus behavior.

@@ -1,11 +1,5 @@
 package main.persistence;
 
-/**
- *
- * @author wxyon
- * @author kyawt
- */
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

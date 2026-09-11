@@ -1,10 +1,5 @@
 package main.exceptions;
 
-/**
- *
- * @author wxyon
- */
-
 /*
 thrown when the player's save file is missing, unreadable, or corrupted,
 or when writing save data fails.
