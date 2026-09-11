@@ -41,17 +41,18 @@ public class EnemyFileRepository {
     type is MONSTER or BOSS. "-" means no value (0 for numeric fields, null for itemDropId).
     */
     public Map<String, List<Enemy>> loadEnemyPoolsByNode() throws DataLoadException {
-        Map<String, List<Enemy>> pools = new HashMap<>();
+        
+        Map<String, List<Enemy>> enemyPools = new HashMap<>();
 
         for (String[] fields : readDataRows()) {
             if (!isType(fields, MONSTER_TYPE)) {
                 continue;
             }
             String nodeId = fields[0].trim();
-            pools.computeIfAbsent(nodeId, key -> new ArrayList<>()).add(buildEnemy(fields));
+            //Generated with assistance from Claude
+            enemyPools.computeIfAbsent(nodeId, key -> new ArrayList<>()).add(buildEnemy(fields));
         }
-
-        return pools;
+        return enemyPools;
     }
 
     /*
