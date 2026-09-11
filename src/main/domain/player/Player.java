@@ -19,6 +19,8 @@ public class Player {
     private static final int STAT_LOSS_AMOUNT = 1;
     private static final int HIGH_POWER_STAT_LOSS_AMOUNT = 2;
     private static final int HIGH_POWER_LEVEL_THRESHOLD = 10;
+    private static final double LOW_POWER_LOSS_CHANCE = 0.3;
+    private static final double HIGH_POWER_LOSS_CHANCE = 0.7;
     
     private String name;
     private final Stats stats;
@@ -214,12 +216,28 @@ public class Player {
     }
     
     /*
-    how this random stat loss is applied is that when a fight is lost, a random
-    stat is chosen, more stats will be lost and chosen at multiples when player
-    surpasses a certain effective power level threshold. Chosen stat cannot be 0,
-    if all stats are 0 it just skips. 
+    the chance that losing a fight actually costs a stat point at all.
+    low power level players rarely lose anything - the consequence only
+    becomes a real risk once effective power level passes the high-power
+    threshold, matching how the loss amount itself also scales up there.
+    */
+    public double getPendingLossChance() {
+        return isHighPowerLevel() ? HIGH_POWER_LOSS_CHANCE : LOW_POWER_LOSS_CHANCE;
+    }
+    
+    /*
+    losing a fight does not always cost a stat point - first rolls
+    against getPendingLossChance() (low at low power level, higher once
+    the high-power threshold is passed). if that roll fails, nothing is
+    lost at all. otherwise, a random stat is chosen, and more is lost
+    per hit once the player surpasses the same power level threshold.
+    chosen stat cannot be 0, if all stats are 0 it just skips.
     */
     public String applyRandomStatLoss(Randomizer randomizer) {
+        if (randomizer.nextDouble() >= getPendingLossChance()) {
+            return null;
+        }
+
         int lossAmount = getPendingStatLossAmount();
         int pick = randomizer.nextInt(3);
         

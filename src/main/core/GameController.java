@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.Map;
 import main.cui.CommandParser;
 import main.cui.ConsoleRenderer;
+import main.domain.combat.Boss;
 import main.domain.combat.CombatResult;
 import main.domain.combat.Dungeon;
 import main.domain.combat.Enemy;
-import main.domain.combat.Boss;
 import main.domain.items.Item;
 import main.domain.player.Player;
 import main.domain.player.StatType;
@@ -235,7 +235,7 @@ public class GameController {
 
     /*
     auto-chains fights with no per-fight prompt, one after another,
-    until the player loses. Each win still checks for floor advancement
+    until the player loses. each win still checks for floor advancement
     and drops, same as a single Explore fight.
     */
     private void handleFightUntilEnd(Player player, Dungeon dungeon) {
@@ -287,16 +287,31 @@ public class GameController {
             return;
         }
 
-        consoleRenderer.printMessage(
-                "A boss blocks your path. (Enemy combat is not implemented yet - this is a placeholder encounter.)");
-        consoleRenderer.printMessage("[1]: Attempt to defeat the boss   [2]: Retreat");
+        Boss boss = bossesByNode.get(currentNode.getId());
+        if (boss == null) {
+            consoleRenderer.printError("This node's boss data could not be found.");
+            return;
+        }
+
+        consoleRenderer.printMessage("A " + boss.getName() + " blocks your path.");
+        consoleRenderer.printMessage("[1]: Fight   [2]: Retreat");
         int choice = commandParser.readChoiceInRange(1, 2);
 
-        if (choice == 1) {
+        if (choice == 2) {
+            consoleRenderer.printMessage("You retreat.");
+            return;
+        }
+
+        CombatResult result = combatService.resolveFight(player, boss);
+        combatSequencer.play(result.getDialogueLines());
+
+        if (result.hasDroppedItem()) {
+            player.addItem(result.getDroppedItem());
+        }
+
+        if (result.isWon()) {
             player.markBossDefeated(currentNode.getId());
             consoleRenderer.printMessage("You defeated the boss! The path onward is now unlocked.");
-        } else {
-            consoleRenderer.printMessage("You retreat.");
         }
     }
 

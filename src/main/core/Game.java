@@ -64,11 +64,11 @@ public class Game {
     }
 
     private Player initializePlayer() {
-        String player_name = commandParser.readLine("Enter your player name: ");
-        
-        if (saveManager.hasSave(player_name)) {
+        String playerName = commandParser.readLine("Enter your player name: ");
+
+        if (saveManager.hasSave(playerName)) {
             try {
-                Player player = saveManager.loadPlayer(player_name);
+                Player player = saveManager.loadPlayer(playerName);
                 consoleRenderer.printMessage("Welcome back, " + player.getName() + "!");
                 return player;
             } catch (SaveDataException e) {
@@ -76,12 +76,12 @@ public class Game {
                 consoleRenderer.printMessage("Starting a new game instead.");
             }
         }
-        return createNewPlayer(player_name);
+        return createNewPlayer(playerName);
     }
 
-    private Player createNewPlayer(String player_name) {
+    private Player createNewPlayer(String playerName) {
         Stats startingStats = new Stats(DEFAULT_STAT_VALUE, DEFAULT_STAT_VALUE, DEFAULT_STAT_VALUE);
-        Player player = new Player(player_name, startingStats, DEFAULT_STARTING_NODE_ID);
+        Player player = new Player(playerName, startingStats, DEFAULT_STARTING_NODE_ID);
 
         for (String itemId : STARTER_ITEM_IDS) {
             Item item = itemCatalog.get(itemId);

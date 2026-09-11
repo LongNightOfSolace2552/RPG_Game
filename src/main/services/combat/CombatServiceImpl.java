@@ -34,7 +34,7 @@ compared to actually matching the enemy's relevant stat, since an enemy
 stat of 0 on an axis is immune there (a big number on that axis does not
 help) and a real deficit on the other axis still drags the total down.
 when both axes are simultaneously at parity, the two halves sum back to
-the same 66% "full match" value the single-axis model used.
+the same 76% "full match" value when both axes are individually at parity.
 
 agility plays no part in this threshold, it is purely a dodge stat,
 layered on afterward exactly as before: a ratio of agility against the
@@ -47,13 +47,13 @@ fixed hardcoded line every time.
 */
 public class CombatServiceImpl implements CombatService {
 
-    private static final double PARITY_WIN_CHANCE_PER_AXIS = 0.33;
-    private static final double WIN_CHANCE_FLOOR_PER_AXIS = 0.15;
+    private static final double PARITY_WIN_CHANCE_PER_AXIS = 0.38;
+    private static final double WIN_CHANCE_FLOOR_PER_AXIS = 0.20;
     private static final double WIN_CHANCE_CEILING_PER_AXIS = 0.5;
     private static final double ADVANTAGE_STEP = 0.05;
-    private static final double DISADVANTAGE_STEP = 0.08;
-    private static final double IMMUNE_BASE_CHANCE_PER_AXIS = 0.25;
-    private static final double DODGE_INFLUENCE_SCALE = 0.3;
+    private static final double DISADVANTAGE_STEP = 0.05;
+    private static final double IMMUNE_BASE_CHANCE_PER_AXIS = 0.30;
+    private static final double DODGE_INFLUENCE_SCALE = 0.2;
     private static final double WAY_AHEAD_THRESHOLD = 0.75;
     private static final double AHEAD_THRESHOLD = 0.5;
 
@@ -176,7 +176,7 @@ public class CombatServiceImpl implements CombatService {
     one axis's contribution to the additive win chance (called once for
     Strength, once for Magic, then summed). half-scale of what a single
     combined axis used to be, so two axes simultaneously at parity add
-    back up to the same 66% a full match used to give.
+    back up to the same 76% a full match gives.
     */
     private double computeAxisChance(int playerStat, int enemyStat) {
         if (enemyStat == 0) {
