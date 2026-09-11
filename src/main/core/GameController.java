@@ -2,8 +2,6 @@ package main.core;
 
 /**
  *
- * @author wxyon
- * @author kyawt
  */
 
 import java.util.ArrayList;

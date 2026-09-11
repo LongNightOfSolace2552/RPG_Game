@@ -2,8 +2,6 @@ package main.config;
 
 /**
  *
- * @author wxyon
- * @author kyawt
  */
 
 import java.util.List;

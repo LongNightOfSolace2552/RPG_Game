@@ -2,8 +2,6 @@ package main.cui;
 
 /**
  *
- * @author wxyon
- * @author kyawt
  */
 
 import java.util.ArrayList;

@@ -2,7 +2,6 @@ package main.domain.player;
 
 /**
  *
- * @author wxyon
  */
 
 /*

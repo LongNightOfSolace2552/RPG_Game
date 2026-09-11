@@ -2,8 +2,6 @@ package main.domain.items;
 
 /**
  *
- * @author wxyon
- * @author kyawt
  */
 
 /*

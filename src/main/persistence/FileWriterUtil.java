@@ -2,7 +2,6 @@ package main.persistence;
 
 /**
  *
- * @author wxyon
  */
 
 import java.io.IOException;

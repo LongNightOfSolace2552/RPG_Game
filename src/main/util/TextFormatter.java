@@ -2,7 +2,6 @@ package main.util;
 
 /**
  *
- * @author wxyon
  */
 
 /* text formatting helpers. */

@@ -7,7 +7,6 @@ package main.domain.combat;
 
 /**
  *
- * @author kyawt
  */
 public class EnemyLoot {
     private final double statDropChance;

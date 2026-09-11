@@ -2,8 +2,6 @@ package main.services.combat;
 
 /**
  *
- * @author wxyon
- * @author kyawt
  */
 
 import main.domain.combat.CombatResult;

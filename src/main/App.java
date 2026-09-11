@@ -2,7 +2,6 @@ package main;
 
 /**
  *
- * @author wxyon
  */
 
 import main.config.AppConfig;
